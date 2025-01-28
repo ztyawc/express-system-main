@@ -21,15 +21,6 @@ class _MenuItem:
 
     def __init__(self, name="未命名项", url="", *,
                  icon="far fa-circle", opened=False, children=tuple(), need_perm="", admin_only=False):
-        """
-        :param name: 页面中显示的名称
-        :param url: url
-        :param icon: 指定文字前图标的class样式
-        :param opened: 是否为已打开状态
-        :param children: 子项, 注意: 目前只能嵌套一次
-        :param need_perm: 需要的权限
-        :param admin_only: 为True时需要管理员权限
-        """
         self.name = name
         self.url = url
         self.icon = icon
@@ -126,7 +117,6 @@ def get_sidebar_menu_items():
                     "用户权限管理", reverse("wuliu:manage_user_permission"),
                     icon="fas fa-users-cog", admin_only=True,
                 ),
-                _MenuItem(),
             ),
         ),
     ]

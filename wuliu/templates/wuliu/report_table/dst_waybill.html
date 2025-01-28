@@ -7,9 +7,9 @@
               {% block action_bar %}
                 <button class="btn btn-outline-primary btn-sm" id="button_wb_export">
                     <i class="ri-c ri-file-download-line"><span>导出</span></i>
-                </button>
-                {% js_export_table_to_excel "wb_search_result" "#button_wb_export" %}
+      </button>
+    {% js_export_table_to_excel "wb_search_result" "#button_wb_export" %}
               {% endblock %}
               {% block waybill_table %}
-                {% show_waybill_table waybill_list "wb_search_result" False %}
-              {% endblock %}
+    {% show_waybill_table waybill_list "wb_search_result" False %}
+{% endblock %}

@@ -3,28 +3,141 @@
 {% load wuliu_extras %}
 {% block title %}用户权限管理{% endblock %}
 {% block header_title %}用户权限管理{% endblock %}
+{% block head_append_js %}
+  <style>
+    .form-container {
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      padding: 2rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-container:hover {
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transform: translateY(-2px);
+    }
+
+    .form-group label {
+      font-weight: 500;
+      color: #495057;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+      padding: 0.6rem 1rem;
+      transition: all 0.2s ease;
+    }
+
+    .form-control:focus {
+      border-color: #4CAF50;
+      box-shadow: 0 0 0 0.2rem rgba(76,175,80,0.15);
+    }
+
+    .select2-container--default .select2-selection--single {
+      border-radius: 8px;
+      height: 38px;
+      border: 1px solid #e0e0e0;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+      line-height: 36px;
+      padding-left: 1rem;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+      height: 36px;
+    }
+
+    .btn {
+      border-radius: 8px;
+      padding: 0.6rem 1.5rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      margin: 0.25rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      border: none;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(76,175,80,0.2);
+    }
+
+    legend {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid rgba(76,175,80,0.1);
+    }
+
+    .permission-tree {
+      background: rgba(76,175,80,0.05);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .permission-tree input[type="checkbox"] {
+      margin-right: 0.5rem;
+    }
+
+    .permission-tree label {
+      margin-bottom: 0.5rem;
+      color: #495057;
+    }
+
+    .action-buttons {
+      margin-top: 1rem;
+      padding: 1rem 0;
+      border-top: 1px solid rgba(0,0,0,0.1);
+    }
+
+    @media (max-width: 768px) {
+      .form-container {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+{% endblock %}
+
           {% block content %}
-            <form action="{% url 'wuliu:manage_user_permission' %}" id="form-manage_user_permission" class="form col-12" method="post">
-                {% csrf_token %}
-                <fieldset>
-                    <legend class="row">用户</legend>
-                    <div class="row align-items-end">
-                      {% show_form_input_field form.user "选择用户" "col col-md-3" %}
-                        <div class="col col-md-2">
-                            <button class="btn btn-primary mr-2" id="button_commit" style="margin-bottom: 0.125rem;">保存</button>
-                        </div>
-                      {% show_form_input_field form.permission %}
-                      {% show_form_input_field form.permission_source_user %}
-                    </div>
-                    <legend class="row">权限</legend>
-                </fieldset>
-            </form>
-            <div class="col-12 col-md-6">
-                <a class="btn btn-primary mr-2" href="{% url 'wuliu:batch_edit_user_permission' %}">批量修改用户权限</a>
-                <button class="btn btn-primary" id="button-select_src_perm_user">复制权限</button>
-              {% cache 300 "full_permission_tree" %}
-                {% show_full_permission_tree "permission_tree" %}
-              {% endcache %}
+            <div class="form-container">
+              <form action="{% url 'wuliu:manage_user_permission' %}" id="form-manage_user_permission" class="form col-12" method="post">
+                  {% csrf_token %}
+                  <fieldset>
+                      <legend>选择用户</legend>
+                      <div class="row align-items-end">
+                        {% show_form_input_field form.user "选择用户" "col-12 col-md-4 mb-3" %}
+                          <div class="col-12 col-md-8 mb-3">
+                              <button class="btn btn-primary" id="button_commit">
+                                <i class="fas fa-save mr-1"></i>保存权限
+                              </button>
+                              <button class="btn btn-primary" id="button-select_src_perm_user">
+                                <i class="fas fa-copy mr-1"></i>复制权限
+                              </button>
+                              <a class="btn btn-primary" href="{% url 'wuliu:batch_edit_user_permission' %}">
+                                <i class="fas fa-users-cog mr-1"></i>批量修改权限
+                              </a>
+                          </div>
+                        {% show_form_input_field form.permission %}
+                        {% show_form_input_field form.permission_source_user %}
+                      </div>
+                      <legend>权限设置</legend>
+                  </fieldset>
+              </form>
+              <div class="col-12 permission-tree">
+                {% cache 300 "full_permission_tree" %}
+                  {% show_full_permission_tree "permission_tree" %}
+                {% endcache %}
+              </div>
             </div>
 <script>
 $(document).ready(function() {
