@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 import os
 from pathlib import Path
-
 from django.contrib.messages import constants
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -40,27 +39,27 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+# CSRF 信任的域名设置
+CSRF_TRUSTED_ORIGINS = [
+    'https://wuliu.ztyawc.me',
+]
 
 # Application definition
-
 INSTALLED_APPS = [
-    # 'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'rest_framework',
-    # 'django_filters',
     'wuliu.apps.WuliuConfig',
     'utils',
 ]
+
 if DEBUG:
     try:
         import django_extensions
         INSTALLED_APPS.append('django_extensions')
-        # print SQL queries in shell_plus
         SHELL_PLUS_PRINT_SQL = True
     except ImportError:
         pass
@@ -74,29 +73,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
-# Pyinstrument, 暂时不用, 因为Django Debug Toolbar更好用更强大
-# if DEBUG:
-#     try:
-#         import pyinstrument
-#         MIDDLEWARE.append('pyinstrument.middleware.ProfilerMiddleware')
-#     except ImportError:
-#         pass
-
-# Django Debug Toolbar
-if ENABLE_DJANGO_TOOLBAR:
-    # debug_toolbar依赖于django.contrib.staticfiles
-    if DEBUG and 'django.contrib.staticfiles' in INSTALLED_APPS:
-        try:
-            import debug_toolbar
-            INSTALLED_APPS.append('debug_toolbar')
-            MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
-            # Internal IPs
-            INTERNAL_IPS = [
-                '127.0.0.1',
-            ]
-        except ImportError:
-            pass
 
 ROOT_URLCONF = 'PPWuLiu.urls'
 
@@ -119,10 +95,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'PPWuLiu.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -133,10 +105,6 @@ DATABASES = {
         'PORT': os.getenv("DJANGO_TMS_MYSQL_PORT", "3306"),
     }
 }
-
-
-# Password validation
-# https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -153,23 +121,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/3.1/topics/i18n/
-
 LANGUAGE_CODE = 'zh-hans'
-
 TIME_ZONE = 'Asia/Shanghai'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
 
@@ -177,16 +133,12 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static")
 ]
 
-# Custom
-
 CACHES = {
     'default': {
-        # 基于本地内存的缓存
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
 }
 
-# 关闭浏览器使会话立即过期
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 MESSAGE_TAGS = {
@@ -210,7 +162,6 @@ LOGGING = {
             'filters': ['require_debug_true'],
             'class': 'logging.StreamHandler',
         },
-        # Unused
         'file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
@@ -246,16 +197,3 @@ LOGGING = {
         },
     },
 }
-
-'''
-# channels相关配置, 暂时不用
-ASGI_APPLICATION = "PPWuLiu.asgi.application"
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            'hosts': [('127.0.0.1', 6379)],
-        },
-    },
-}
-'''
