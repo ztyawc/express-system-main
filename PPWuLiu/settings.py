@@ -42,6 +42,7 @@ ALLOWED_HOSTS = ['*']
 # CSRF 信任的域名设置
 CSRF_TRUSTED_ORIGINS = [
     'https://wuliu.ztyawc.me',
+    'https://d2g7e1p9w1amqm.cloudfront.net'
 ]
 
 # Application definition
